@@ -1,0 +1,194 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  padding: 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.header h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #222;
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.closeBtn:hover {
+  background: #f0f0f0;
+  color: #222;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.field input,
+.field textarea {
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #222;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: none;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: #fce205;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.cancelBtn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.cancelBtn:hover {
+  background: #f5f5f5;
+}
+
+.saveBtn {
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: none;
+  background: #fce205;
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: #ecc832;
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Avatar Section */
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.avatarPreviewWrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.avatarPreview {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fce205;
+}
+
+.editOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24px;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.avatarPreviewWrapper:hover .editOverlay {
+  opacity: 1;
+}
+
+.uploadLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fce205;
+  cursor: pointer;
+  background: #222;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: transform 0.15s;
+}
+
+.uploadLabel:hover {
+  transform: scale(1.05);
+}
+
+.hiddenInput {
+  display: none;
+}

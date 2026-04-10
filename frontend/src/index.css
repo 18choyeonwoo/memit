@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap');
+
+/* ============================================================
+   Global Reset & Tokens
+   ============================================================ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #fafafa;
+  --white: #ffffff;
+  --yellow: #f5d442;
+  --yellow-light: #fdf3c7;
+  --yellow-bg: #fffbe6;
+  --text-primary: #222;
+  --text-secondary: #888;
+  --text-muted: #aaa;
+  --border: #f0f0f0;
+  --accent-green: #b8c724;
+  --accent-pink: #e74c6f;
+  --accent-orange: #e8a020;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}

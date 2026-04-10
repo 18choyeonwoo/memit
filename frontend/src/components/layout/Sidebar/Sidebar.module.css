@@ -1,0 +1,161 @@
+.sidebar {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 20px 32px;
+  background: #fff;
+  border-right: 1px solid #f0f0f0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  box-sizing: border-box;
+  transition: width 0.3s ease, min-width 0.3s ease, padding 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+  min-width: 80px;
+  padding: 28px 12px 32px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.sidebar.collapsed .sidebar-header {
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #b8c724;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.sidebar.collapsed .logo {
+  font-size: 24px;
+}
+
+.collapse-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.collapse-toggle:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.categories-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e8a020;
+  margin: 0 0 24px 4px;
+  letter-spacing: -0.2px;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #aaa;
+  transition: all 0.18s ease;
+  text-align: left;
+  font-family: inherit;
+}
+
+.sidebar.collapsed .menu-item {
+  justify-content: center;
+  padding: 10px;
+}
+
+.menu-item:hover {
+  background: #fef9e7;
+  color: #333;
+}
+
+.menu-item.active {
+  background: #fdf3c7;
+  color: #222;
+  font-weight: 600;
+}
+
+.menu-item.active .menu-icon {
+  color: #e8a020;
+}
+
+.menu-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  color: #bbb;
+}
+
+.sidebar.collapsed .menu-icon {
+  margin: 0;
+  font-size: 22px;
+}
+
+.menu-label {
+  white-space: nowrap;
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 0;
+  border-radius: 28px;
+  border: 2px solid #f5d442;
+  background: #fffbe6;
+  color: #222;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  letter-spacing: -0.2px;
+}
+
+.upload-btn:hover {
+  background: #f5d442;
+  color: #000;
+}
+
+.sidebar.collapsed .upload-btn {
+  padding: 14px 0;
+  font-size: 20px;
+}

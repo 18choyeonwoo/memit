@@ -1,0 +1,59 @@
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FiTrash2 } from 'react-icons/fi';
+import styles from './MemeCard.module.css';
+
+export default function MemeCard({ meme, onClick, onToggleLike, onAuthorClick, currentUserId, onDelete }) {
+  // 본인 밈인지 확인 (integer ID 비교)
+  const isOwn = currentUserId != null && meme.userId === currentUserId;
+
+  const handleLikeClick = (e) => {
+    e.stopPropagation();
+    onToggleLike?.();
+  };
+
+  const handleAuthorClick = (e) => {
+    e.stopPropagation();
+    onAuthorClick?.(meme.author);
+  };
+
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    if (window.confirm(`"${meme.title}" 밈을 삭제할까요?`)) {
+      onDelete?.();
+    }
+  };
+
+  return (
+    <div className={styles['meme-card']} onClick={onClick}>
+      <div className={styles['meme-image-wrapper']}>
+        <img src={meme.image} alt={meme.title} className={styles['meme-image']} />
+        {isOwn && (
+          <button className={styles['delete-btn']} onClick={handleDeleteClick} title="삭제">
+            <FiTrash2 />
+          </button>
+        )}
+      </div>
+      <div className={styles['meme-info']}>
+        <h3 className={styles['meme-title']}>{meme.title}</h3>
+        <div className={styles['meme-likes']} onClick={handleLikeClick}>
+          {meme.liked ? (
+            <FaHeart className={`${styles['heart-icon']} ${styles['liked']}`} />
+          ) : (
+            <FaRegHeart className={styles['heart-icon']} />
+          )}
+          <span className={styles['likes-count']}>{meme.likes.toLocaleString()}</span>
+        </div>
+        <div className={styles['meme-tags']}>
+          {meme.tags.map((tag) => (
+            <span key={tag} className={styles['meme-tag']}>
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className={styles['meme-author']} onClick={handleAuthorClick}>
+          {meme.author}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,455 @@
+/* ============================================================
+   UploadPage 스타일
+   ============================================================ */
+
+.upload-page {
+  flex: 1;
+  padding: 0 0 48px;
+}
+
+/* 뒤로가기 */
+.upload-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #333;
+  cursor: pointer;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.upload-back-btn:hover {
+  background: #f0f0f0;
+}
+
+/* — 페이지 헤더 — */
+.upload-page-header {
+  margin-bottom: 32px;
+}
+
+.upload-page-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 6px;
+  letter-spacing: -0.5px;
+}
+
+.upload-page-subtitle {
+  font-size: 15px;
+  color: #999;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* — 2단 레이아웃 — */
+.upload-form-container {
+  display: flex;
+  gap: 32px;
+}
+
+.upload-left-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.upload-right-col {
+  flex: 1;
+  min-width: 0;
+}
+
+/* — 드래그 앤 드롭 영역 — */
+.drag-drop-zone {
+  background: #f7f7f7;
+  border: 2px dashed transparent;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 32px;
+  transition: all 0.2s ease;
+  min-height: 360px;
+}
+
+.drag-drop-zone.hover {
+  border-color: #f5d442;
+  background: #fffbe6;
+}
+
+.drop-icon-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f5d442;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.drop-icon {
+  font-size: 26px;
+  color: #fff;
+}
+
+.drop-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 6px;
+}
+
+.drop-sub {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0 0 24px;
+}
+
+.browse-btn {
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.browse-btn:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+/* — 파일 프리뷰 — */
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: #fff;
+  border-radius: 14px;
+  margin-top: 16px;
+  border: 1px solid #f0f0f0;
+}
+
+.file-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #222;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 3px;
+}
+
+.file-meta {
+  font-size: 12px;
+  color: #aaa;
+  margin: 0;
+}
+
+.file-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #e74c6f;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.file-delete:hover {
+  background: #fde8ee;
+}
+
+/* — 오른쪽 폼 요소 공통 — */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  resize: vertical;
+  outline: none;
+  transition: background 0.15s;
+  box-sizing: border-box;
+}
+
+.form-textarea::placeholder {
+  color: #bbb;
+}
+
+.form-textarea:focus {
+  background: #efefef;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  outline: none;
+  transition: background 0.15s;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #bbb;
+}
+
+.form-input:focus {
+  background: #efefef;
+}
+
+/* 추천 태그 */
+.recommend-label {
+  font-size: 13px;
+  color: #888;
+  margin: 0 0 10px;
+  font-weight: 500;
+}
+
+.recommend-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.rec-tag {
+  padding: 8px 20px;
+  border-radius: 24px;
+  border: 1.5px solid #e0e0e0;
+  background: #f5f5f5;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.rec-tag.selected {
+  background: #f5d442;
+  border-color: #f5d442;
+  color: #222;
+  font-weight: 600;
+}
+
+.rec-tag:hover:not(.selected) {
+  background: #eee;
+}
+
+/* 갤러리 셀렉트 */
+.custom-select {
+  position: relative;
+}
+
+.form-select {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: #f5f5f5;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.form-select:focus {
+  background: #efefef;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #888;
+  pointer-events: none;
+}
+
+/* 심사 안내 */
+.review-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  background: #f8f9d4;
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+
+.notice-icon {
+  font-size: 20px;
+  color: #7ab648;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.notice-text {
+  font-size: 13px;
+  color: #555;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* 제출 버튼 */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 0;
+  border-radius: 16px;
+  border: none;
+  background: #f5d442;
+  color: #222;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s ease;
+  letter-spacing: -0.2px;
+}
+
+.submit-btn:hover {
+  background: #ecc832;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(245, 212, 66, 0.35);
+}
+
+.submit-icon {
+  font-size: 18px;
+}
+
+/* 이미지 미리보기 */
+.drag-drop-zone.has-file {
+  padding: 0;
+  cursor: default;
+  overflow: hidden;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+  max-height: 360px;
+}
+
+/* 파일 썸네일 아이콘 */
+.file-thumb-icon {
+  font-size: 24px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+/* 제목 필수 표시 */
+.required {
+  color: #e74c6f;
+  margin-left: 2px;
+}
+
+/* 선택된 태그 칩 */
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.selected-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px 4px 12px;
+  background: #f5d442;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #222;
+}
+
+.chip-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.chip-remove:hover {
+  color: #e74c6f;
+}
+
+/* 버튼 비활성 */
+.submit-btn.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 반응형 */
+@media (max-width: 860px) {
+  .upload-form-container {
+    flex-direction: column;
+  }
+}

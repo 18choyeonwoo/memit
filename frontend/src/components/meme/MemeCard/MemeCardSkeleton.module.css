@@ -1,0 +1,28 @@
+.skeleton-card {
+  break-inside: avoid;
+  margin-bottom: 20px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+}
+
+.image-skeleton {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.info-skeleton {
+  padding: 10px 4px 6px;
+}
+
+.meta-skeleton {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.author-skeleton {
+  margin-top: 8px;
+}

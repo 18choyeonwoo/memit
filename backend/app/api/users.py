@@ -1,0 +1,59 @@
+import os
+import uuid
+from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
+from sqlmodel import Session
+from ..database import get_session
+from ..models.user import User
+from ..schemas.user import UserResponse, UserUpdate
+from ..core.deps import get_current_user
+
+router = APIRouter(prefix="/users", tags=["users"])
+
+UPLOAD_DIR = "static/uploads"
+
+@router.get("/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    user_in: UserUpdate,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    if user_in.bio is not None:
+        current_user.bio = user_in.bio
+    if user_in.status_message is not None:
+        current_user.status_message = user_in.status_message
+    if user_in.avatar_url is not None:
+        current_user.avatar_url = user_in.avatar_url
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+    return current_user
+
+@router.post("/avatar", response_model=UserResponse)
+async def upload_avatar(
+    file: UploadFile = File(...),
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File must be an image")
+
+    ext = os.path.splitext(file.filename)[1]
+    filename = f"avatar_{current_user.id}_{uuid.uuid4().hex[:8]}{ext}"
+    file_path = os.path.join(UPLOAD_DIR, filename)
+
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    contents = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(contents)
+
+    image_url = f"/static/uploads/{filename}"
+    current_user.avatar_url = image_url
+    
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+    return current_user

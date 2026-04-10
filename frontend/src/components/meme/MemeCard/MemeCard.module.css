@@ -1,0 +1,115 @@
+.meme-card {
+  break-inside: avoid;
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.meme-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.meme-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  border: none;
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.delete-btn:hover {
+  background: rgba(220, 38, 38, 0.85);
+}
+
+.meme-card:hover .delete-btn {
+  display: flex;
+}
+
+.meme-image {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.meme-info {
+  padding: 10px 4px 6px;
+}
+
+.meme-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+
+.meme-likes {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.heart-icon {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.heart-icon.liked {
+  color: #e74c6f;
+}
+
+.likes-count {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+}
+
+.meme-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.meme-tag {
+  font-size: 11px;
+  color: #999;
+  font-weight: 400;
+}
+
+.meme-author {
+  font-size: 11px;
+  color: #888;
+  margin-top: 8px;
+  font-weight: 500;
+  display: inline-block;
+  cursor: pointer;
+  transition: color 0.1s;
+}
+
+.meme-author:hover {
+  color: #facc15;
+  text-decoration: underline;
+}

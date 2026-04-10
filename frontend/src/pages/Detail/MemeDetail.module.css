@@ -1,0 +1,198 @@
+/* ============================================================
+   MemeDetail 스타일
+   ============================================================ */
+
+.meme-detail-area {
+  flex: 1;
+  padding: 0 0 32px;
+}
+
+/* — 뒤로 가기 — */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #333;
+  cursor: pointer;
+  padding: 8px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.back-btn:hover {
+  background: #f0f0f0;
+}
+
+/* — 상세 컨테이너 (이미지 + 정보) — */
+.detail-container {
+  display: flex;
+  gap: 36px;
+  margin-bottom: 48px;
+}
+
+/* 이미지 사이드 */
+.detail-image-side {
+  flex: 0 0 380px;
+  max-width: 380px;
+}
+
+.detail-large-image {
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
+}
+
+/* 액션 버튼 행 */
+.detail-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid #e0e0e0;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.action-primary {
+  background: #f5d442;
+  border-color: #f5d442;
+  color: #222;
+}
+
+.action-primary:hover {
+  background: #ecc832;
+}
+
+.action-secondary {
+  background: #fff;
+  color: #555;
+}
+
+.action-secondary:hover {
+  background: #f5f5f5;
+}
+
+.action-danger {
+  background: #fff;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+.action-danger:hover {
+  background: #fef2f2;
+}
+
+/* 정보 사이드 */
+.detail-info-side {
+  flex: 1;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.detail-user-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detail-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f5d442, #e8a020);
+  flex-shrink: 0;
+}
+
+.detail-author {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.detail-time {
+  font-size: 13px;
+  color: #aaa;
+  font-weight: 400;
+}
+
+.detail-title {
+  font-size: 38px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 16px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.detail-tag {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.detail-description {
+  font-size: 14px;
+  color: #777;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* — Similar Memits — */
+.similar-section {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 32px;
+}
+
+.similar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+  margin: 0 0 20px;
+}
+
+.similar-grid {
+  columns: 4;
+  column-gap: 16px;
+}
+
+
+
+/* 반응형 */
+@media (max-width: 860px) {
+  .detail-container {
+    flex-direction: column;
+  }
+
+  .detail-image-side {
+    flex: none;
+    max-width: 100%;
+  }
+
+  .similar-grid {
+    columns: 2;
+  }
+}
