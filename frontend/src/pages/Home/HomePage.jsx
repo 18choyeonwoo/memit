@@ -3,18 +3,21 @@ import MemeGrid from '../../components/meme/MemeGrid';
 import Leaderboard from '../../components/feature/Leaderboard';
 import Footer from '../../components/layout/Footer';
 
-export default function HomePage({ memeCards, isLoading, handleMemeClick, toggleLike, handleProfileView }) {
+export default function HomePage({ memeCards, isLoading, handleMemeClick, toggleLike, handleProfileView, currentUserId, onEdit, onDelete }) {
   return (
     <>
       <TrendingTags />
       <div className="content-row">
         <main className="feed-area">
-          <MemeGrid 
-            memeCards={memeCards} 
+          <MemeGrid
+            memeCards={memeCards}
             isLoading={isLoading}
-            onMemeClick={handleMemeClick} 
-            onToggleLike={toggleLike} 
+            onMemeClick={handleMemeClick}
+            onToggleLike={toggleLike}
             onAuthorClick={handleProfileView}
+            currentUserId={currentUserId}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         </main>
         <Leaderboard />

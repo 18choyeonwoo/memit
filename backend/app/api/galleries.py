@@ -43,6 +43,32 @@ def get_gallery(gallery_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Gallery not found")
     return gallery
 
+@router.delete("/{gallery_id}/memes/{meme_id}", status_code=204)
+def remove_meme_from_gallery(
+    gallery_id: int,
+    meme_id: int,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    gallery = session.get(Gallery, gallery_id)
+    if not gallery:
+        raise HTTPException(status_code=404, detail="Gallery not found")
+    if gallery.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your gallery")
+
+    link = session.exec(
+        select(MemeGalleryLink).where(
+            MemeGalleryLink.gallery_id == gallery_id,
+            MemeGalleryLink.meme_id == meme_id,
+        )
+    ).first()
+    if not link:
+        raise HTTPException(status_code=404, detail="Meme not in gallery")
+
+    session.delete(link)
+    session.commit()
+
+
 @router.post("/{gallery_id}/memes/{meme_id}")
 def add_meme_to_gallery(
     gallery_id: int,

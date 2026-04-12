@@ -22,6 +22,15 @@ export const userService = {
   // 실제 백엔드 아바타 업로드
   uploadAvatar: (formData) => apiClient.postForm('/users/avatar', formData),
 
+  // 실제 백엔드 내 갤러리 목록 조회
+  getMyGalleries: () => apiClient.get('/galleries/my'),
+
   // 실제 백엔드 갤러리 생성 → { name, description }
   createGallery: (data) => apiClient.post('/galleries/', data),
+
+  // 실제 백엔드 갤러리에 밈 추가
+  addMemeToGallery: (galleryId, memeId) => apiClient.post(`/galleries/${galleryId}/memes/${memeId}`, null),
+
+  // 실제 백엔드 갤러리에서 밈 제거
+  removeFromGallery: (galleryId, memeId) => apiClient.delete(`/galleries/${galleryId}/memes/${memeId}`),
 };

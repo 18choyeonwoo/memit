@@ -1,3 +1,5 @@
+const BACKEND_URL = 'http://localhost:8000';
+
 function formatTimeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const minutes = Math.floor(diff / 60000);
@@ -7,11 +9,20 @@ function formatTimeAgo(dateStr) {
   return `${Math.floor(hours / 24)}D AGO`;
 }
 
+function toAbsoluteUrl(url) {
+  if (!url) return null;
+  return url.startsWith('http') ? url : `${BACKEND_URL}${url}`;
+}
+
+// Backend user → frontend user shape (avatar_url 절대경로 변환)
+export function adaptUser(u) {
+  if (!u) return u;
+  return { ...u, avatar_url: toAbsoluteUrl(u.avatar_url) };
+}
+
 // Backend meme → frontend meme shape
 export function adaptMeme(m) {
-  const imageUrl = m.image_url?.startsWith('http')
-    ? m.image_url
-    : `http://localhost:8000${m.image_url}`;
+  const imageUrl = toAbsoluteUrl(m.image_url);
   return {
     id: m.id,
     image: imageUrl,
@@ -22,7 +33,7 @@ export function adaptMeme(m) {
     tags: (m.tags || []).map(t => `#${t.name}`),
     author: m.author?.username || 'Unknown',
     authorId: m.author?.id,
-    userId: m.user_id,
+    userId: m.author?.id,
     timeAgo: formatTimeAgo(m.created_at),
   };
 }

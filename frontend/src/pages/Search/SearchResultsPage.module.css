@@ -74,6 +74,21 @@
   border-radius: 4px 4px 0 0;
 }
 
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 20px;
+  background: #fce205;
+  color: #555;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
 /* Empty State Styling */
 .results-content {
   min-height: 400px;

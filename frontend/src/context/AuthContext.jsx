@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { apiClient } from '../api/apiClient';
+import { adaptUser } from '../api/adapters';
 
 const AuthContext = createContext(null);
 
@@ -13,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) return;
     apiClient.get('/users/me')
       .then(data => {
-        setUser(data);
+        setUser(adaptUser(data));
         setIsLoggedIn(true);
       })
       .catch(() => {
@@ -24,9 +25,10 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (email, password) => {
     const data = await apiClient.post('/auth/login', { email, password });
     localStorage.setItem('access_token', data.access_token);
-    setUser(data.user);
+    const adapted = adaptUser(data.user);
+    setUser(adapted);
     setIsLoggedIn(true);
-    return data.user;
+    return adapted;
   }, []);
 
   const logout = useCallback(() => {
@@ -37,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   // 프로필 수정 후 user 상태 갱신
   const updateUser = useCallback((updates) => {
-    setUser(prev => ({ ...prev, ...updates }));
+    setUser(prev => adaptUser({ ...prev, ...updates }));
   }, []);
 
   return (

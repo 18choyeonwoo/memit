@@ -1,6 +1,5 @@
 import { FiEdit2, FiPlus, FiUserPlus, FiUserCheck } from 'react-icons/fi';
-import { useState } from 'react';
-import { allGalleries } from '../../data';
+import { useState, useEffect } from 'react';
 import MemeCard from '../../components/meme/MemeCard';
 import ProfileEditModal from '../../components/shared/ProfileEditModal/ProfileEditModal';
 import CreateGalleryModal from '../../components/shared/CreateGalleryModal/CreateGalleryModal';
@@ -18,15 +17,22 @@ export default function ProfilePage({
   onUpdateProfile,
   currentUserId,
   onDeleteMeme,
+  onEditMeme,
 }) {
   const [activeTab, setActiveTab] = useState('likedMemes');
   const [isFollowing, setIsFollowing] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateGalleryModal, setShowCreateGalleryModal] = useState(false);
+  const [userGalleries, setUserGalleries] = useState([]);
+
+  useEffect(() => {
+    if (!isOwn) return;
+    userService.getMyGalleries().then(setUserGalleries).catch(() => {});
+  }, [isOwn]);
 
   const handleCreateGallery = async (data) => {
-    await userService.createGallery(data);
-    // 성공 토스트는 부모에서 받기 어려우므로 alert 대신 모달이 닫히는 것으로 완료 표시
+    const created = await userService.createGallery(data);
+    setUserGalleries((prev) => [...prev, created]);
   };
 
   // 백엔드(real) user와 mock user 양쪽 필드 모두 대응
@@ -41,10 +47,6 @@ export default function ProfilePage({
     followers: user?.followers ?? user?.followers_count ?? 0,
     following: user?.following ?? user?.following_count ?? 0,
   };
-
-  const userGalleries = allGalleries.filter(
-    (g) => g.userId === user?.userId && (isOwn || g.isPublic)
-  );
 
   const likedMemesList = memeCards.filter((meme) => meme.liked);
 
@@ -101,40 +103,42 @@ export default function ProfilePage({
         </div>
 
         <div className={styles['gallery-list']}>
-          {userGalleries.map((gallery) => (
-            <div
-              key={gallery.id}
-              className={styles['gallery-card']}
-              onClick={() => onGalleryClick?.(gallery)}
-            >
-              <div className={styles['gallery-thumb-composite']}>
-                <div className={styles['main-thumb']}>
-                  {gallery.previewImages?.[0] && (
-                    <img src={gallery.previewImages[0]} alt="" />
-                  )}
-                </div>
-                <div className={styles['side-thumbs']}>
-                  <div className={styles['side-thumb']}>
-                    {gallery.previewImages?.[1] && (
-                      <img src={gallery.previewImages[1]} alt="" />
-                    )}
+          {userGalleries.map((gallery) => {
+            const previews = (gallery.previewImages || (gallery.memes || []).map(m => {
+              const url = m.image_url || m.image;
+              return url?.startsWith('http') ? url : `http://localhost:8000${url}`;
+            })).slice(0, 3);
+            const count = gallery.count ?? (gallery.memes?.length ?? 0);
+            const updatedAt = gallery.updatedAt ?? (gallery.created_at ? new Date(gallery.created_at).toLocaleDateString('ko-KR') : '');
+            return (
+              <div
+                key={gallery.id}
+                className={styles['gallery-card']}
+                onClick={() => onGalleryClick?.(gallery)}
+              >
+                <div className={styles['gallery-thumb-composite']}>
+                  <div className={styles['main-thumb']}>
+                    {previews[0] && <img src={previews[0]} alt="" />}
                   </div>
-                  <div className={styles['side-thumb']}>
-                    {gallery.previewImages?.[2] && (
-                      <img src={gallery.previewImages[2]} alt="" />
-                    )}
+                  <div className={styles['side-thumbs']}>
+                    <div className={styles['side-thumb']}>
+                      {previews[1] && <img src={previews[1]} alt="" />}
+                    </div>
+                    <div className={styles['side-thumb']}>
+                      {previews[2] && <img src={previews[2]} alt="" />}
+                    </div>
+                  </div>
+                </div>
+                <div className={styles['gallery-info-v2']}>
+                  <h3 className={styles['gallery-name-v2']}>{gallery.name}</h3>
+                  <div className={styles['gallery-meta-v2']}>
+                    <span className={styles['pin-count']}>핀 {count}개</span>
+                    <span className={styles['update-time']}>{updatedAt}</span>
                   </div>
                 </div>
               </div>
-              <div className={styles['gallery-info-v2']}>
-                <h3 className={styles['gallery-name-v2']}>{gallery.name}</h3>
-                <div className={styles['gallery-meta-v2']}>
-                  <span className={styles['pin-count']}>핀 {gallery.count}개</span>
-                  <span className={styles['update-time']}>{gallery.updatedAt}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
 
           {isOwn && (
             <div className={styles['gallery-card']}>
@@ -188,6 +192,7 @@ export default function ProfilePage({
                   onAuthorClick={onAuthorClick}
                   currentUserId={currentUserId}
                   onDelete={() => onDeleteMeme?.(meme.id)}
+                  onEdit={onEditMeme}
                 />
               ))
             ) : (

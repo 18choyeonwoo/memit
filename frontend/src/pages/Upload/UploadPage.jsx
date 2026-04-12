@@ -22,6 +22,7 @@ export default function UploadPage({ onBack, onUploadSuccess }) {
   const [gallery, setGallery]       = useState('');
   const [dropHover, setDropHover]   = useState(false);
   const fileRef = useRef(null);
+  const composingRef = useRef(false);
 
   // ── 파일 적용 공통 ────────────────────────────────────────
   const applyFile = (file) => {
@@ -57,6 +58,8 @@ export default function UploadPage({ onBack, onUploadSuccess }) {
     );
 
   const handleTagKeyDown = (e) => {
+    // 한국어 IME 조합 중 Enter는 무시 (마지막 글자 중복 방지)
+    if (e.nativeEvent.isComposing || composingRef.current) return;
     if (e.key === 'Enter' && tagInput.trim()) {
       e.preventDefault();
       const newTag = tagInput.trim();
@@ -70,8 +73,8 @@ export default function UploadPage({ onBack, onUploadSuccess }) {
     if (!fileObj)        { alert('이미지를 선택해 주세요.'); return; }
     if (!title.trim())   { alert('제목을 입력해 주세요.'); return; }
 
+    // tagInput은 Enter로 확정된 것만 selectedTags에 있으므로 그대로 사용
     const allTags = [...selectedTags];
-    if (tagInput.trim()) allTags.push(tagInput.trim());
 
     const formData = new FormData();
     formData.append('file', fileObj);
@@ -208,6 +211,8 @@ export default function UploadPage({ onBack, onUploadSuccess }) {
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={handleTagKeyDown}
+              onCompositionStart={() => { composingRef.current = true; }}
+              onCompositionEnd={() => { composingRef.current = false; }}
             />
             {selectedTags.length > 0 && (
               <div className={styles['selected-tags']}>

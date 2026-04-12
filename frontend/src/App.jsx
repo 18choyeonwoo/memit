@@ -14,6 +14,7 @@ import { useToast } from './hooks/useToast';
 import { useAuth } from './context/AuthContext';
 import { memeService } from './services/memeService';
 import { userService } from './services/userService';
+import { adaptMeme } from './api/adapters';
 import { allUsers } from './api/mockData';
 import './App.css';
 
@@ -84,6 +85,27 @@ function App() {
         )
       );
       showToast('처리에 실패했습니다.', 'error');
+    }
+  };
+
+  // ── 밈 수정 ───────────────────────────────────────────────
+  const handleEditMeme = async (memeId, updates) => {
+    try {
+      const raw = await memeService.updateMeme(memeId, updates);
+      const updatedFields = {
+        title: raw.title,
+        description: raw.description ?? '',
+        tags: (raw.tags || []).map((t) => `#${t.name}`),
+      };
+      setMemeCards((prev) =>
+        prev.map((m) => (m.id === memeId ? { ...m, ...updatedFields } : m))
+      );
+      // 상세 페이지에서 수정한 경우 selectedMeme도 갱신
+      setSelectedMeme((prev) => (prev?.id === memeId ? { ...prev, ...updatedFields } : prev));
+      showToast('밈이 수정되었습니다.', 'success');
+    } catch (err) {
+      showToast(err.message || '수정에 실패했습니다.', 'error');
+      throw err;
     }
   };
 
@@ -176,6 +198,7 @@ function App() {
             onMemeClick={handleMemeClick}
             currentUserId={user?.id}
             onDelete={handleDeleteMeme}
+            onEdit={handleEditMeme}
           />
         );
 
@@ -183,13 +206,17 @@ function App() {
         return (
           <GalleryDetailPage
             gallery={selectedGallery}
-            memes={memeCards.filter((m) => selectedGallery?.memeIds?.includes(m.id) ?? false)}
+            memes={(selectedGallery?.memes || []).map(adaptMeme)}
             onBack={handleBack}
             onMemeClick={handleMemeClick}
             onToggleLike={toggleLike}
             onDeleteMeme={handleDeleteMeme}
+            onEditMeme={handleEditMeme}
+            onRemoveFromGallery={async (memeId) => {
+              await userService.removeFromGallery(selectedGallery.id, memeId);
+            }}
             currentUserId={user?.id}
-            isOwn={isLoggedIn && selectedGallery?.userId === user?.userId}
+            isOwn={isLoggedIn && selectedGallery?.user_id === user?.id}
           />
         );
 
@@ -220,6 +247,7 @@ function App() {
             onUpdateProfile={handleUpdateProfile}
             currentUserId={user?.id}
             onDeleteMeme={handleDeleteMeme}
+            onEditMeme={handleEditMeme}
           />
         );
 
@@ -240,6 +268,11 @@ function App() {
           <SearchResultsPage
             query={searchQuery}
             onUploadClick={() => handleMenuClick('upload')}
+            onMemeClick={handleMemeClick}
+            onToggleLike={toggleLike}
+            currentUserId={user?.id}
+            onDelete={handleDeleteMeme}
+            onEdit={handleEditMeme}
           />
         );
 
@@ -252,6 +285,9 @@ function App() {
             handleMemeClick={handleMemeClick}
             toggleLike={toggleLike}
             handleProfileView={handleProfileView}
+            currentUserId={user?.id}
+            onEdit={handleEditMeme}
+            onDelete={handleDeleteMeme}
           />
         );
     }

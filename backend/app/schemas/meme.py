@@ -10,6 +10,11 @@ class TagResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class MemeUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    tags: Optional[str] = None  # comma-separated
+
 class MemeResponse(BaseModel):
     id: int
     title: str

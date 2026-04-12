@@ -1,20 +1,47 @@
+import { useState, useEffect } from 'react';
 import { FiArrowLeft } from 'react-icons/fi';
 import MemeCard from '../../components/meme/MemeCard';
 import styles from './GalleryDetailPage.module.css';
 
 export default function GalleryDetailPage({
   gallery,
-  memes,
+  memes: initialMemes,
   onBack,
   onMemeClick,
   onToggleLike,
   onDeleteMeme,
+  onEditMeme,
+  onRemoveFromGallery,
   currentUserId,
   isOwn,
 }) {
-  // 실제 밈 데이터가 없으면 갤러리 previewImages를 그리드로 표시
-  const hasRealMemes = memes && memes.length > 0;
-  const hasPreviewImages = gallery.previewImages && gallery.previewImages.length > 0;
+  const [localMemes, setLocalMemes] = useState(initialMemes || []);
+
+  // gallery가 바뀌면 (다른 갤러리로 이동) 밈 목록 초기화
+  useEffect(() => {
+    setLocalMemes(initialMemes || []);
+  }, [gallery?.id]);
+
+  const handleDelete = async (memeId) => {
+    await onDeleteMeme?.(memeId);
+    setLocalMemes((prev) => prev.filter((m) => m.id !== memeId));
+  };
+
+  const handleEdit = async (memeId, updates) => {
+    await onEditMeme?.(memeId, updates);
+    setLocalMemes((prev) =>
+      prev.map((m) =>
+        m.id === memeId
+          ? { ...m, title: updates.title ?? m.title, description: updates.description ?? m.description }
+          : m
+      )
+    );
+  };
+
+  const handleRemove = async (memeId) => {
+    await onRemoveFromGallery?.(memeId);
+    setLocalMemes((prev) => prev.filter((m) => m.id !== memeId));
+  };
 
   return (
     <div className={styles.page}>
@@ -28,30 +55,23 @@ export default function GalleryDetailPage({
           <p className={styles.description}>{gallery.description}</p>
         )}
         <span className={styles.meta}>
-          핀 {gallery.count ?? memes?.length ?? 0}개
-          {gallery.updatedAt && ` · ${gallery.updatedAt} 업데이트`}
+          밈 {localMemes.length}개
         </span>
       </div>
 
-      {hasRealMemes ? (
+      {localMemes.length > 0 ? (
         <div className={styles.grid}>
-          {memes.map((meme) => (
+          {localMemes.map((meme) => (
             <MemeCard
               key={meme.id}
               meme={meme}
-              onClick={() => onMemeClick(meme)}
-              onToggleLike={() => onToggleLike(meme.id)}
+              onClick={() => onMemeClick?.(meme)}
+              onToggleLike={() => onToggleLike?.(meme.id)}
               currentUserId={currentUserId}
-              onDelete={() => onDeleteMeme(meme.id)}
+              onEdit={(memeId, updates) => handleEdit(memeId, updates)}
+              onDelete={() => handleDelete(meme.id)}
+              onRemoveFromGallery={isOwn ? () => handleRemove(meme.id) : undefined}
             />
-          ))}
-        </div>
-      ) : hasPreviewImages ? (
-        <div className={styles.previewGrid}>
-          {gallery.previewImages.map((src, i) => (
-            <div key={i} className={styles.previewCard}>
-              <img src={src} alt="" />
-            </div>
           ))}
         </div>
       ) : (
@@ -59,7 +79,7 @@ export default function GalleryDetailPage({
           <p>이 갤러리에 아직 밈이 없습니다.</p>
           {isOwn && (
             <p className={styles.emptyHint}>
-              밈 상세 페이지에서 "내 앨범에 추가"를 눌러 밈을 담아보세요.
+              밈 상세 페이지에서 &ldquo;내 갤러리에 추가&rdquo;를 눌러 담아보세요.
             </p>
           )}
         </div>
