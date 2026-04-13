@@ -9,11 +9,13 @@ import SearchResultsPage from './pages/Search';
 import MemeDetail from './pages/Detail';
 import GalleryDetailPage from './pages/GalleryDetail/GalleryDetailPage';
 import AuthPage from './pages/Auth';
+import CommunityPage from './pages/Community';
 import Toast from './components/shared/Toast/Toast';
 import { useToast } from './hooks/useToast';
 import { useAuth } from './context/AuthContext';
 import { memeService } from './services/memeService';
 import { userService } from './services/userService';
+import { communityService } from './services/communityService';
 import { adaptMeme } from './api/adapters';
 import { allUsers } from './api/mockData';
 import './App.css';
@@ -26,6 +28,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeProfileUser, setActiveProfileUser] = useState(allUsers[0]);
+  const [communityPosts, setCommunityPosts] = useState([]);
 
   const { isLoggedIn, user, logout, updateUser } = useAuth();
   const { toasts, showToast, removeToast } = useToast();
@@ -121,6 +124,62 @@ function App() {
       }
     } catch (err) {
       showToast(err.message || '삭제에 실패했습니다.', 'error');
+    }
+  };
+
+  // ── 커뮤니티 ──────────────────────────────────────────────
+  useEffect(() => {
+    communityService.getPosts()
+      .then(setCommunityPosts)
+      .catch(() => {});
+  }, []);
+
+  const handleAddPost = async ({ title, content, isAnonymous }) => {
+    try {
+      const newPost = await communityService.createPost({ title, content, isAnonymous });
+      setCommunityPosts((prev) => [newPost, ...prev]);
+    } catch (err) {
+      showToast(err.message || '글 등록에 실패했습니다.', 'error');
+      throw err;
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    try {
+      await communityService.deletePost(postId);
+      setCommunityPosts((prev) => prev.filter((p) => p.id !== postId));
+      showToast('글이 삭제되었습니다.', 'success');
+    } catch (err) {
+      showToast(err.message || '삭제에 실패했습니다.', 'error');
+    }
+  };
+
+  const handleAddComment = async ({ postId, content, isAnonymous }) => {
+    try {
+      const newComment = await communityService.createComment(postId, { content, isAnonymous });
+      setCommunityPosts((prev) =>
+        prev.map((p) =>
+          p.id === postId ? { ...p, comments: [...(p.comments ?? []), newComment] } : p
+        )
+      );
+    } catch (err) {
+      showToast(err.message || '댓글 등록에 실패했습니다.', 'error');
+      throw err;
+    }
+  };
+
+  const handleDeleteComment = async ({ postId, commentId }) => {
+    try {
+      await communityService.deleteComment(postId, commentId);
+      setCommunityPosts((prev) =>
+        prev.map((p) =>
+          p.id === postId
+            ? { ...p, comments: (p.comments ?? []).filter((c) => c.id !== commentId) }
+            : p
+        )
+      );
+    } catch (err) {
+      showToast(err.message || '댓글 삭제에 실패했습니다.', 'error');
     }
   };
 
@@ -273,6 +332,25 @@ function App() {
             currentUserId={user?.id}
             onDelete={handleDeleteMeme}
             onEdit={handleEditMeme}
+            communityPosts={communityPosts}
+            onCommunityPostClick={() => handleMenuClick('community')}
+          />
+        );
+
+      case 'community':
+        return (
+          <CommunityPage
+            posts={communityPosts}
+            onAddPost={handleAddPost}
+            onDeletePost={handleDeletePost}
+            onAddComment={handleAddComment}
+            onDeleteComment={handleDeleteComment}
+            currentUserId={user?.id}
+            isLoggedIn={isLoggedIn}
+            onLoginRequired={() => {
+              setPage('auth');
+              showToast('로그인이 필요한 서비스입니다.', 'info');
+            }}
           />
         );
 
@@ -308,7 +386,7 @@ function App() {
     );
   }
 
-  const activeSidebarMenu = ['recommend', 'feed', 'settings'].includes(page)
+  const activeSidebarMenu = ['recommend', 'feed', 'community', 'settings'].includes(page)
     ? page
     : page === 'detail'
     ? 'recommend'

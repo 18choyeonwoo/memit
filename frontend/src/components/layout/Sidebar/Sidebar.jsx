@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { BsEmojiSmile } from 'react-icons/bs';
-import { FiCompass, FiSettings, FiMenu, FiPlus } from 'react-icons/fi';
+import { FiCompass, FiSettings, FiMenu, FiPlus, FiUsers } from 'react-icons/fi';
 import { menuItems } from '../../../data';
 import styles from './Sidebar.module.css';
 
 const iconMap = {
   smile: <BsEmojiSmile />,
   compass: <FiCompass />,
+  community: <FiUsers />,
   settings: <FiSettings />,
 };
 

@@ -5,6 +5,7 @@ from .like import MemeLike
 if TYPE_CHECKING:
     from .meme import Meme
     from .gallery import Gallery
+    from .post import Post, PostComment
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -22,3 +23,5 @@ class User(SQLModel, table=True):
     memes: List["Meme"] = Relationship(back_populates="author")
     liked_memes: List["Meme"] = Relationship(back_populates="likes", link_model=MemeLike)
     galleries: List["Gallery"] = Relationship(back_populates="owner")
+    posts: List["Post"] = Relationship(back_populates="author")
+    comments: List["PostComment"] = Relationship(back_populates="author")

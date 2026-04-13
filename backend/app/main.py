@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from .api import auth
-from .api import memes, likes, galleries, users
+from .api import memes, likes, galleries, users, posts
 from .database import init_db
 
 UPLOAD_DIR = "static/uploads"
@@ -38,3 +38,4 @@ app.include_router(memes.router)
 app.include_router(likes.router)
 app.include_router(galleries.router)
 app.include_router(users.router)
+app.include_router(posts.router)

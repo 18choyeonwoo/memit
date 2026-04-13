@@ -25,6 +25,48 @@
   text-decoration-thickness: 4px;
 }
 
+/* 섹션 구분 */
+.section {
+  margin-bottom: 56px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #eaeaea;
+}
+
+.section-icon {
+  font-size: 18px;
+  color: #e8a020;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 20px;
+  background: #fce205;
+  color: #555;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.community-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .tabs-section {
   border-bottom: 2px solid #eaeaea;
   margin-bottom: 40px;
@@ -187,4 +229,11 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+/* 커뮤니티 검색 결과 목록 */
+.community-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }

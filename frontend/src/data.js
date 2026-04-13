@@ -7,6 +7,7 @@
 export const menuItems = [
   { id: 'recommend', label: '추천 탭', icon: 'smile' },
   { id: 'feed', label: '내 피드', icon: 'compass' },
+  { id: 'community', label: '커뮤니티', icon: 'community' },
   { id: 'settings', label: '설정', icon: 'settings' },
 ];
 
