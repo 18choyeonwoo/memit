@@ -9,3 +9,4 @@ python-dotenv
 alembic
 pydantic-settings
 email-validator
+google-cloud-storage

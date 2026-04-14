@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:8000';
+// 로컬: http://localhost:8000  /  배포: /api  (Nginx가 백엔드로 프록시)
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
 
 function getToken() {
   return localStorage.getItem('access_token');

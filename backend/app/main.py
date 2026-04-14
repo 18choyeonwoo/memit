@@ -5,15 +5,15 @@ from fastapi.staticfiles import StaticFiles
 from .api import auth
 from .api import memes, likes, galleries, users, posts
 from .database import init_db
+from .config import settings
 
 UPLOAD_DIR = "static/uploads"
 
 app = FastAPI(title="Memit API")
 
-# CORS Settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For development, allow all origins
+    allow_origins=settings.allowed_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

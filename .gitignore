@@ -24,3 +24,6 @@ frontend/yarn-error.log*
 
 # Docker
 .dockerignore
+
+# .gitignore 파일 내부
+iam-key.json

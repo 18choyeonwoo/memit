@@ -6,6 +6,8 @@ from ..database import get_session
 from ..models.user import User
 from ..schemas.user import UserResponse, UserUpdate
 from ..core.deps import get_current_user
+from ..core.storage import upload_to_gcs
+from ..config import settings
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -41,16 +43,20 @@ async def upload_avatar(
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File must be an image")
 
-    ext = os.path.splitext(file.filename)[1]
-    filename = f"avatar_{current_user.id}_{uuid.uuid4().hex[:8]}{ext}"
-    file_path = os.path.join(UPLOAD_DIR, filename)
-
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
     contents = await file.read()
-    with open(file_path, "wb") as f:
-        f.write(contents)
 
-    image_url = f"/static/uploads/{filename}"
+    if settings.GCS_BUCKET_NAME:
+        # 배포 환경: GCS에 업로드
+        image_url = upload_to_gcs(contents, file.filename, folder="avatars")
+    else:
+        # 로컬 환경: 기존 방식 유지
+        ext = os.path.splitext(file.filename)[1]
+        filename = f"avatar_{current_user.id}_{uuid.uuid4().hex[:8]}{ext}"
+        file_path = os.path.join(UPLOAD_DIR, filename)
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
+        with open(file_path, "wb") as f:
+            f.write(contents)
+        image_url = f"/static/uploads/{filename}"
     current_user.avatar_url = image_url
     
     session.add(current_user)
