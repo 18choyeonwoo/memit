@@ -19,7 +19,5 @@ def upload_to_gcs(file_bytes: bytes, original_filename: str, folder: str = "uplo
 
     content_type = "image/jpeg" if ext in (".jpg", ".jpeg") else f"image/{ext.lstrip('.')}"
     blob.upload_from_string(file_bytes, content_type=content_type)
-    blob.make_public()
 
-    return blob.public_url
-    # 예: https://storage.googleapis.com/memit-bucket-yay/uploads/abc123.jpg
+    return f"https://storage.googleapis.com/{settings.GCS_BUCKET_NAME}/{blob_path}"

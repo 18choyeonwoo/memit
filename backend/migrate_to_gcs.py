@@ -19,6 +19,7 @@ from sqlmodel import Session, select
 from app.database import engine
 from app.models.meme import Meme
 from app.models.user import User
+from app.models.post import Post, PostComment  # noqa: F401 — needed for SQLAlchemy relationship resolution
 
 BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME", "memit-bucket-yay")
 LOCAL_DIR = "static/uploads"
@@ -32,8 +33,7 @@ def upload_file(client: gcs.Client, local_path: str, blob_path: str) -> str:
     blob = bucket.blob(blob_path)
     with open(local_path, "rb") as f:
         blob.upload_from_file(f, content_type=content_type)
-    blob.make_public()
-    return blob.public_url
+    return f"https://storage.googleapis.com/{BUCKET_NAME}/{blob_path}"
 
 
 def migrate():
