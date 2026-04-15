@@ -14,7 +14,7 @@ const iconMap = {
 // onMenuClick: 메뉴 전환 콜백
 // onUploadClick: 업로드 버튼 클릭 콜백
 export default function Sidebar({ activeMenu, onMenuClick, onUploadClick }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
     <aside className={`${styles['sidebar']} ${isCollapsed ? styles['collapsed'] : ''}`}>
@@ -39,7 +39,7 @@ export default function Sidebar({ activeMenu, onMenuClick, onUploadClick }) {
               title={isCollapsed ? item.label : undefined}
             >
               <span className={styles['menu-icon']}>{iconMap[item.icon]}</span>
-              {!isCollapsed && <span className={styles['menu-label']}>{item.label}</span>}
+              <span className={`${styles['menu-label']} ${isCollapsed ? styles['label-hidden'] : ''}`}>{item.label}</span>
             </button>
           ))}
         </nav>

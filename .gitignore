@@ -27,3 +27,7 @@ frontend/yarn-error.log*
 
 # .gitignore 파일 내부
 iam-key.json
+
+# 밈 원본 이미지 (GCS로 마이그레이션 완료)
+meme/
+meme_new/

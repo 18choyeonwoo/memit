@@ -196,3 +196,28 @@
     columns: 2;
   }
 }
+
+@media (max-width: 600px) {
+  .detail-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1 1 calc(50% - 4px);
+    justify-content: center;
+    padding: 10px 8px;
+    font-size: 12px;
+    min-width: 0;
+  }
+
+  .action-btn span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .detail-title {
+    font-size: 26px;
+  }
+}
