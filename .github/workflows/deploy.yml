@@ -9,13 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 깃허브 액션이
+    - name: VM에 접속해서 최신 코드 받고 도커 재실행하기
       uses: appleboy/ssh-action@master
       with:
-        host: 104.197.144.27 # 미밋 GCP VM 고정 IP
-        username: github-actions 
-        key: ${{ secrets.GCP_SSH_PRIVATE_KEY }} # 깃허브 Secrets 비밀키
+        host: 104.197.144.27
+        username: github-actions
+        key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
         script: |
-          cd /home/ye0nwu1118/memit
-          git pull origin dev
-          sudo docker compose up -d --build
+          # sudo sh -c '' 안에 있는 명령어들은 모두 최고 관리자 권한으로 실행되어 방해받지 않습니다.
+          sudo sh -c '
+            cd /home/ye0nwu1118/memit
+            git config --global --add safe.directory /home/ye0nwu1118/memit
+            git pull origin dev
+            docker compose up -d --build
+          '
