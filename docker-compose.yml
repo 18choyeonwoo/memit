@@ -9,6 +9,11 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d memit_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     # 외부 미노출 — backend만 접근
 
   backend:
@@ -22,7 +27,8 @@ services:
       - ./backend/iam-key.json:/app/iam-key.json:ro
       - ./backend/static:/app/static   # GCS 미사용 시 로컬 이미지 보존용
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   frontend:
     build:
