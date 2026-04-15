@@ -1,0 +1,21 @@
+name: Deploy to GCP VM
+
+on:
+  push:
+    branches: [ "dev" ] # dev 브랜치에 코드가 push될 때만 알아서 실행됨
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 깃허브 액션이
+      uses: appleboy/ssh-action@master
+      with:
+        host: 104.197.144.27 # 미밋 GCP VM 고정 IP
+        username: github-actions 
+        key: ${{ secrets.GCP_SSH_PRIVATE_KEY }} # 깃허브 Secrets 비밀키
+        script: |
+          cd ~/memit
+          git pull origin dev
+          sudo docker compose up -d --build
