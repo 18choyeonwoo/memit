@@ -31,3 +31,7 @@ iam-key.json
 # 밈 원본 이미지 (GCS로 마이그레이션 완료)
 meme/
 meme_new/
+
+# 시딩 스크립트 로컬 설정 (이메일/비번)
+.env.local
+.meme_watch_state.json
