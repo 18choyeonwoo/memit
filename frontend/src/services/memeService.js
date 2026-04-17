@@ -11,6 +11,9 @@ export const memeService = {
     return data.map(adaptMeme);
   },
 
+  // 현재 로그인 유저가 좋아요한 meme_id 목록
+  getLikedIds: () => apiClient.get('/users/me/likes'),
+
   // 실제 백엔드 좋아요 토글 → { liked, likes_count } 반환
   toggleLike: (id) => apiClient.post(`/memes/${id}/like`, null),
 

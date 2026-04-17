@@ -1,9 +1,11 @@
 import os
 import uuid
 from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
-from sqlmodel import Session
+from sqlmodel import Session, select
+from typing import List
 from ..database import get_session
 from ..models.user import User
+from ..models.like import MemeLike
 from ..schemas.user import UserResponse, UserUpdate
 from ..core.deps import get_current_user
 from ..core.storage import upload_to_gcs
@@ -16,6 +18,17 @@ UPLOAD_DIR = "static/uploads"
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@router.get("/me/likes", response_model=List[int])
+def get_my_liked_meme_ids(
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """현재 유저가 좋아요한 meme_id 목록 반환"""
+    rows = session.exec(
+        select(MemeLike.meme_id).where(MemeLike.user_id == current_user.id)
+    ).all()
+    return rows
 
 @router.put("/me", response_model=UserResponse)
 def update_me(

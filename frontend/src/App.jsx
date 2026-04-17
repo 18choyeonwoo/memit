@@ -22,6 +22,7 @@ import './App.css';
 
 function App() {
   const [page, setPage] = useState('recommend');
+  const [pageHistory, setPageHistory] = useState([]);
   const [selectedMeme, setSelectedMeme] = useState(null);
   const [selectedGallery, setSelectedGallery] = useState(null);
   const [memeCards, setMemeCards] = useState([]);
@@ -33,13 +34,25 @@ function App() {
   const { isLoggedIn, user, logout, updateUser } = useAuth();
   const { toasts, showToast, removeToast } = useToast();
 
-  // 실제 백엔드에서 밈 목록 로드
+  // 실제 백엔드에서 밈 목록 로드 + 좋아요 상태 복원
   useEffect(() => {
     const initFetch = async () => {
       setIsLoading(true);
       try {
         const data = await memeService.getMemes();
-        setMemeCards(data);
+        // 로그인 상태면 좋아요한 meme_id 목록을 받아서 liked 필드 설정
+        const token = localStorage.getItem('access_token');
+        if (token) {
+          try {
+            const likedIds = await memeService.getLikedIds();
+            const likedSet = new Set(likedIds);
+            setMemeCards(data.map((m) => ({ ...m, liked: likedSet.has(m.id) })));
+          } catch {
+            setMemeCards(data);
+          }
+        } else {
+          setMemeCards(data);
+        }
       } catch (err) {
         showToast('밈을 불러오는 데 실패했습니다.', 'error');
       } finally {
@@ -196,26 +209,36 @@ function App() {
   };
 
   // ── 네비게이션 ─────────────────────────────────────────────
-  const handleMemeClick = (meme) => {
-    setSelectedMeme(meme);
-    setPage('detail');
+  const pushPage = (newPage) => {
+    setPageHistory((prev) => [...prev, page]);
+    setPage(newPage);
     window.scrollTo(0, 0);
   };
 
   const handleBack = () => {
-    if (page === 'gallery') {
-      setPage(activeProfileUser ? 'feed' : 'recommend');
-      setSelectedGallery(null);
+    if (pageHistory.length > 0) {
+      const prev = pageHistory[pageHistory.length - 1];
+      setPageHistory((h) => h.slice(0, -1));
+      setPage(prev);
+      if (prev !== 'detail') setSelectedMeme(null);
+      if (prev !== 'gallery') setSelectedGallery(null);
+      window.scrollTo(0, 0);
     } else {
       setPage('recommend');
       setSelectedMeme(null);
+      setSelectedGallery(null);
+      window.scrollTo(0, 0);
     }
+  };
+
+  const handleMemeClick = (meme) => {
+    setSelectedMeme(meme);
+    pushPage('detail');
   };
 
   const handleGalleryClick = (gallery) => {
     setSelectedGallery(gallery);
-    setPage('gallery');
-    window.scrollTo(0, 0);
+    pushPage('gallery');
   };
 
   const handleMenuClick = (menuId) => {
@@ -227,6 +250,8 @@ function App() {
     if (menuId === 'feed' && user) {
       setActiveProfileUser(user);
     }
+    // 사이드바 메뉴는 최상위 이동 → 히스토리 초기화
+    setPageHistory([]);
     setPage(menuId);
     window.scrollTo(0, 0);
   };
@@ -235,15 +260,13 @@ function App() {
     const targetUser = allUsers.find((u) => u.username === username);
     if (targetUser) {
       setActiveProfileUser(targetUser);
-      setPage('profile');
-      window.scrollTo(0, 0);
+      pushPage('profile');
     }
   };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    setPage('search');
-    window.scrollTo(0, 0);
+    pushPage('search');
   };
 
   // ── 렌더링 ─────────────────────────────────────────────────
