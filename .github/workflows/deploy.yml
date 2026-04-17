@@ -22,4 +22,5 @@ jobs:
             git config --global --add safe.directory /home/ye0nwu1118/memit
             git pull origin dev
             docker compose up -d --build
+            docker compose restart nginx
           '

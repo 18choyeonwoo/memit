@@ -9,7 +9,7 @@ from ..models.like import MemeLike
 from ..models.gallery import MemeGalleryLink
 from ..models.user import User
 from ..schemas.meme import MemeResponse, MemeUpdate
-from ..core.deps import get_current_user
+from ..core.deps import get_current_user, get_optional_user
 from ..core.storage import upload_to_gcs
 from ..config import settings
 
@@ -81,27 +81,37 @@ def list_memes(
     skip: int = 0,
     limit: int = 20,
     session: Session = Depends(get_session),
+    current_user: Optional[User] = Depends(get_optional_user),
 ):
     memes = session.exec(
         select(Meme).order_by(Meme.created_at.desc()).offset(skip).limit(limit)
     ).all()
-    return memes
+    liked_ids: set = set()
+    if current_user:
+        liked_ids = set(session.exec(
+            select(MemeLike.meme_id).where(MemeLike.user_id == current_user.id)
+        ).all())
+    result = []
+    for meme in memes:
+        meme_resp = MemeResponse.model_validate(meme)
+        meme_resp.liked = meme.id in liked_ids
+        result.append(meme_resp)
+    return result
 
 @router.get("/search", response_model=List[MemeResponse])
 def search_memes(
     q: str,
     session: Session = Depends(get_session),
+    current_user: Optional[User] = Depends(get_optional_user),
 ):
     query = q.strip()
     if not query:
         return []
 
-    # 태그 검색 시 앞의 # 제거
     tag_query = query.lstrip("#")
     pattern = f"%{query}%"
     tag_pattern = f"%{tag_query}%"
 
-    # 검색어와 일치하는 태그를 가진 밈 ID 목록
     tag_meme_ids = session.exec(
         select(MemeTagLink.meme_id)
         .join(Tag, MemeTagLink.tag_id == Tag.id)
@@ -120,7 +130,17 @@ def search_memes(
         .order_by(Meme.created_at.desc())
     ).all()
 
-    return memes
+    liked_ids: set = set()
+    if current_user:
+        liked_ids = set(session.exec(
+            select(MemeLike.meme_id).where(MemeLike.user_id == current_user.id)
+        ).all())
+    result = []
+    for meme in memes:
+        meme_resp = MemeResponse.model_validate(meme)
+        meme_resp.liked = meme.id in liked_ids
+        result.append(meme_resp)
+    return result
 
 
 @router.get("/recommended", response_model=List[MemeResponse])

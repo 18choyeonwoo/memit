@@ -29,7 +29,7 @@ export function adaptMeme(m) {
     title: m.title,
     description: m.description || '',
     likes: m.likes_count,
-    liked: false,
+    liked: m.liked ?? false,
     tags: (m.tags || []).map(t => `#${t.name}`),
     author: m.author?.username || 'Unknown',
     authorId: m.author?.id,

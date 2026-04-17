@@ -34,25 +34,12 @@ function App() {
   const { isLoggedIn, user, logout, updateUser } = useAuth();
   const { toasts, showToast, removeToast } = useToast();
 
-  // 실제 백엔드에서 밈 목록 로드 + 좋아요 상태 복원
   useEffect(() => {
     const initFetch = async () => {
       setIsLoading(true);
       try {
         const data = await memeService.getMemes();
-        // 로그인 상태면 좋아요한 meme_id 목록을 받아서 liked 필드 설정
-        const token = localStorage.getItem('access_token');
-        if (token) {
-          try {
-            const likedIds = await memeService.getLikedIds();
-            const likedSet = new Set(likedIds);
-            setMemeCards(data.map((m) => ({ ...m, liked: likedSet.has(m.id) })));
-          } catch {
-            setMemeCards(data);
-          }
-        } else {
-          setMemeCards(data);
-        }
+        setMemeCards(data);
       } catch (err) {
         showToast('밈을 불러오는 데 실패했습니다.', 'error');
       } finally {

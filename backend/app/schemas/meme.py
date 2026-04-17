@@ -21,6 +21,7 @@ class MemeResponse(BaseModel):
     image_url: str
     description: Optional[str] = None
     likes_count: int = 0
+    liked: bool = False
     created_at: datetime
     tags: List[TagResponse] = []
     author: Optional[UserResponse] = None
