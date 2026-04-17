@@ -16,11 +16,11 @@ jobs:
         username: github-actions
         key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
         script: |
-          # sudo sh -c '' 안에 있는 명령어들은 모두 최고 관리자 권한으로 실행되어 방해받지 않습니다.
+          set -e
+          sudo -u ye0nwu1118 git -C /home/ye0nwu1118/memit fetch origin
+          sudo -u ye0nwu1118 git -C /home/ye0nwu1118/memit reset --hard origin/dev
           sudo sh -c '
             cd /home/ye0nwu1118/memit
-            git config --global --add safe.directory /home/ye0nwu1118/memit
-            git pull origin dev
             docker compose up -d --build
             docker compose restart nginx
           '
