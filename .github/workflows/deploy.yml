@@ -17,6 +17,7 @@ jobs:
         key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
         script: |
           set -e
+          sudo chown -R ye0nwu1118:ye0nwu1118 /home/ye0nwu1118/memit
           sudo -u ye0nwu1118 git -C /home/ye0nwu1118/memit fetch origin
           sudo -u ye0nwu1118 git -C /home/ye0nwu1118/memit reset --hard origin/dev
           sudo sh -c '
