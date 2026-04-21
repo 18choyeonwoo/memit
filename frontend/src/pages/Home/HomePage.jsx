@@ -2,7 +2,7 @@ import MemeGrid from '../../components/meme/MemeGrid';
 import Leaderboard from '../../components/feature/Leaderboard';
 import Footer from '../../components/layout/Footer';
 
-export default function HomePage({ memeCards, isLoading, handleMemeClick, toggleLike, handleProfileView, currentUserId, onEdit, onDelete }) {
+export default function HomePage({ memeCards, isLoading, handleMemeClick, toggleLike, handleProfileView, currentUserId, onEdit, onDelete, onLeaderboardMemeClick }) {
   return (
     <>
       <div className="content-row">
@@ -18,7 +18,7 @@ export default function HomePage({ memeCards, isLoading, handleMemeClick, toggle
             onDelete={onDelete}
           />
         </main>
-        <Leaderboard />
+        <Leaderboard onMemeClick={onLeaderboardMemeClick} />
       </div>
       <Footer />
     </>

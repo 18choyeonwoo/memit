@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HiFire, HiHeart } from 'react-icons/hi';
 import { memeService } from '../../../services/memeService';
+import { adaptMeme } from '../../../api/adapters';
 import styles from './Leaderboard.module.css';
 
 const MOBILE_BREAKPOINT = 1100;
@@ -10,13 +11,13 @@ function formatLikes(count) {
   return String(count);
 }
 
-export default function Leaderboard() {
+export default function Leaderboard({ onMemeClick }) {
   const [items, setItems] = useState([]);
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= MOBILE_BREAKPOINT);
 
   useEffect(() => {
-    memeService.getHotMemes().then(setItems).catch(() => {});
+    memeService.getHotMemes().then((data) => setItems(data.map(adaptMeme))).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -37,19 +38,23 @@ export default function Leaderboard() {
 
       <ol className={styles['leaderboard-list']}>
         {visibleItems.map((item, idx) => (
-          <li key={item.id} className={styles['leaderboard-item']}>
+          <li
+            key={item.id}
+            className={styles['leaderboard-item']}
+            onClick={() => onMemeClick?.(item)}
+          >
             <span className={styles['leaderboard-rank']}>
               {String(idx + 1).padStart(2, '0')}
             </span>
             <div className={styles['leaderboard-info']}>
               <p className={styles['leaderboard-name']}>{item.title}</p>
               <p className={styles['leaderboard-tags']}>
-                {(item.tags || []).map((t) => `#${t.name}`).join(' ')}
+                {(item.tags || []).join(' ')}
               </p>
             </div>
             <div className={styles['leaderboard-likes']}>
               <HiHeart className={styles['like-icon']} />
-              <span>{formatLikes(item.likes_count)}</span>
+              <span>{formatLikes(item.likes)}</span>
             </div>
           </li>
         ))}

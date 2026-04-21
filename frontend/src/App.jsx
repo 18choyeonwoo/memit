@@ -420,6 +420,7 @@ function App() {
             currentUserId={user?.id}
             onEdit={handleEditMeme}
             onDelete={handleDeleteMeme}
+            onLeaderboardMemeClick={handleMemeClick}
           />
         );
     }

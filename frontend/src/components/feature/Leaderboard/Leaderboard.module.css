@@ -42,6 +42,15 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 4px 6px;
+  margin: 0 -6px;
+  transition: background 0.15s;
+}
+
+.leaderboard-item:hover {
+  background: #f7f7f7;
 }
 
 .leaderboard-rank {
