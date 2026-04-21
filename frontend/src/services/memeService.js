@@ -30,4 +30,6 @@ export const memeService = {
     const data = await apiClient.get('/memes/?limit=500');
     return data.map(adaptMeme).filter((m) => m.id !== memeId);
   },
+
+  getHotMemes: () => apiClient.get('/memes/recommended?limit=10'),
 };
