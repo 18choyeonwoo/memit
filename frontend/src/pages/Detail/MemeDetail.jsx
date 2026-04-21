@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiArrowLeft, FiCopy, FiShare2, FiBookmark, FiTrash2, FiEdit2 } from 'react-icons/fi';
-import MemeCard from '../../components/meme/MemeCard';
+import FeedMemeCard from '../../components/meme/FeedMemeCard/FeedMemeCard';
 import MemeCardSkeleton from '../../components/meme/MemeCard/MemeCardSkeleton';
 import AddToGalleryModal from '../../components/shared/AddToGalleryModal/AddToGalleryModal';
 import MemeEditModal from '../../components/shared/MemeEditModal/MemeEditModal';
@@ -119,7 +119,7 @@ export default function MemeDetail({ meme, onBack, onMemeClick, currentUserId, o
                     <MemeCardSkeleton key={i} imageHeight={h} />
                   ))
                 : similarMemes.map((item) => (
-                    <MemeCard
+                    <FeedMemeCard
                       key={item.id}
                       meme={item}
                       onClick={() => onMemeClick?.(item)}

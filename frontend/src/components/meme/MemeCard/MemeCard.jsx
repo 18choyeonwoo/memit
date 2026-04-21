@@ -4,7 +4,7 @@ import { FiEdit2, FiTrash2, FiMoreVertical, FiMinus } from 'react-icons/fi';
 import MemeEditModal from '../../shared/MemeEditModal/MemeEditModal';
 import styles from './MemeCard.module.css';
 
-export default function MemeCard({ meme, onClick, onToggleLike, onAuthorClick, currentUserId, onDelete, onEdit, onRemoveFromGallery, compact = false }) {
+export default function MemeCard({ meme, onClick, onToggleLike, onAuthorClick, currentUserId, onDelete, onEdit, onRemoveFromGallery }) {
   const isOwn = currentUserId != null && meme.userId === currentUserId;
   const showMenu = isOwn || !!onRemoveFromGallery;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -112,18 +112,14 @@ export default function MemeCard({ meme, onClick, onToggleLike, onAuthorClick, c
             )}
             <span className={styles['likes-count']}>{meme.likes.toLocaleString()}</span>
           </div>
-          {!compact && (
-            <div className={styles['meme-tags']}>
-              {meme.tags.map((tag) => (
-                <span key={tag} className={styles['meme-tag']}>{tag}</span>
-              ))}
-            </div>
-          )}
-          {!compact && (
-            <div className={styles['meme-author']} onClick={handleAuthorClick}>
-              {meme.author}
-            </div>
-          )}
+          <div className={styles['meme-tags']}>
+            {meme.tags.map((tag) => (
+              <span key={tag} className={styles['meme-tag']}>{tag}</span>
+            ))}
+          </div>
+          <div className={styles['meme-author']} onClick={handleAuthorClick}>
+            {meme.author}
+          </div>
         </div>
       </div>
 
