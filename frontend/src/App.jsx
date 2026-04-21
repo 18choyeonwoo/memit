@@ -16,9 +16,15 @@ import { useAuth } from './context/AuthContext';
 import { memeService } from './services/memeService';
 import { userService } from './services/userService';
 import { communityService } from './services/communityService';
+import { apiClient } from './api/apiClient';
 import { adaptMeme } from './api/adapters';
 import { allUsers } from './api/mockData';
 import './App.css';
+
+function parseMemeIdFromPath(pathname) {
+  const m = pathname.match(/^\/meme\/(\d+)$/);
+  return m ? parseInt(m[1], 10) : null;
+}
 
 function App() {
   const [page, setPage] = useState('recommend');
@@ -48,6 +54,38 @@ function App() {
     };
     initFetch();
   }, [showToast]);
+
+  // ── URL 직접 접근: /meme/:id ───────────────────────────────
+  useEffect(() => {
+    const memeId = parseMemeIdFromPath(window.location.pathname);
+    if (!memeId) return;
+    apiClient.get(`/memes/${memeId}`)
+      .then((raw) => {
+        setSelectedMeme(adaptMeme(raw));
+        setPage('detail');
+      })
+      .catch(() => window.history.replaceState(null, '', '/'));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── 브라우저 뒤로/앞으로 버튼 ─────────────────────────────
+  useEffect(() => {
+    const handler = () => {
+      const memeId = parseMemeIdFromPath(window.location.pathname);
+      if (memeId) {
+        const found = memeCards.find((m) => m.id === memeId);
+        if (found) {
+          setSelectedMeme(found);
+          setPage('detail');
+        }
+      } else {
+        setPage('recommend');
+        setSelectedMeme(null);
+        setPageHistory([]);
+      }
+    };
+    window.addEventListener('popstate', handler);
+    return () => window.removeEventListener('popstate', handler);
+  }, [memeCards]);
 
   // ── 좋아요 토글 ────────────────────────────────────────────
   const toggleLike = async (memeId) => {
@@ -207,13 +245,17 @@ function App() {
       const prev = pageHistory[pageHistory.length - 1];
       setPageHistory((h) => h.slice(0, -1));
       setPage(prev);
-      if (prev !== 'detail') setSelectedMeme(null);
+      if (prev !== 'detail') {
+        setSelectedMeme(null);
+        window.history.pushState(null, '', '/');
+      }
       if (prev !== 'gallery') setSelectedGallery(null);
       window.scrollTo(0, 0);
     } else {
       setPage('recommend');
       setSelectedMeme(null);
       setSelectedGallery(null);
+      window.history.pushState(null, '', '/');
       window.scrollTo(0, 0);
     }
   };
@@ -221,6 +263,7 @@ function App() {
   const handleMemeClick = (meme) => {
     setSelectedMeme(meme);
     pushPage('detail');
+    window.history.pushState({ memeId: meme.id }, '', `/meme/${meme.id}`);
   };
 
   const handleGalleryClick = (gallery) => {
@@ -238,6 +281,7 @@ function App() {
       setActiveProfileUser(user);
     }
     // 사이드바 메뉴는 최상위 이동 → 히스토리 초기화
+    window.history.pushState(null, '', '/');
     setPageHistory([]);
     setPage(menuId);
     window.scrollTo(0, 0);

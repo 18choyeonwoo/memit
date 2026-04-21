@@ -3,7 +3,7 @@ import { HiFire, HiHeart } from 'react-icons/hi';
 import { memeService } from '../../../services/memeService';
 import styles from './Leaderboard.module.css';
 
-const MOBILE_BREAKPOINT = 800;
+const MOBILE_BREAKPOINT = 1100;
 
 function formatLikes(count) {
   if (count >= 1000) return `${(count / 1000).toFixed(1).replace('.0', '')}k`;

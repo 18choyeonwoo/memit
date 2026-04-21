@@ -16,6 +16,7 @@ export default function HomePage({ memeCards, isLoading, handleMemeClick, toggle
             currentUserId={currentUserId}
             onEdit={onEdit}
             onDelete={onDelete}
+            compact
           />
         </main>
         <Leaderboard />
