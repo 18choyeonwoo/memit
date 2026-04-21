@@ -1,19 +1,27 @@
 import { useState, useEffect } from 'react';
 import { FiArrowLeft, FiCopy, FiShare2, FiBookmark, FiTrash2, FiEdit2 } from 'react-icons/fi';
 import MemeCard from '../../components/meme/MemeCard';
+import MemeCardSkeleton from '../../components/meme/MemeCard/MemeCardSkeleton';
 import AddToGalleryModal from '../../components/shared/AddToGalleryModal/AddToGalleryModal';
 import MemeEditModal from '../../components/shared/MemeEditModal/MemeEditModal';
 import { memeService } from '../../services/memeService';
 import styles from './MemeDetail.module.css';
+
+const SKELETON_HEIGHTS = ['240px', '320px', '180px', '280px'];
 
 export default function MemeDetail({ meme, onBack, onMemeClick, currentUserId, onDelete, onEdit }) {
   const isOwn = currentUserId != null && meme.userId === currentUserId;
   const [showGalleryModal, setShowGalleryModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [similarMemes, setSimilarMemes] = useState([]);
+  const [similarLoading, setSimilarLoading] = useState(true);
 
   useEffect(() => {
-    memeService.getSimilarMemes(meme.id).then(setSimilarMemes).catch(() => {});
+    setSimilarLoading(true);
+    memeService.getSimilarMemes(meme.id)
+      .then(setSimilarMemes)
+      .catch(() => {})
+      .finally(() => setSimilarLoading(false));
   }, [meme.id]);
 
   const handleDelete = () => {
@@ -102,17 +110,21 @@ export default function MemeDetail({ meme, onBack, onMemeClick, currentUserId, o
         </div>
 
         {/* Similar Memits */}
-        {similarMemes.length > 0 && (
+        {(similarLoading || similarMemes.length > 0) && (
           <div className={styles['similar-section']}>
             <h2 className={styles['similar-title']}>Similar Memits</h2>
             <div className={styles['similar-grid']}>
-              {similarMemes.map((item) => (
-                <MemeCard
-                  key={item.id}
-                  meme={item}
-                  onClick={() => onMemeClick?.(item)}
-                />
-              ))}
+              {similarLoading
+                ? SKELETON_HEIGHTS.map((h, i) => (
+                    <MemeCardSkeleton key={i} imageHeight={h} />
+                  ))
+                : similarMemes.map((item) => (
+                    <MemeCard
+                      key={item.id}
+                      meme={item}
+                      onClick={() => onMemeClick?.(item)}
+                    />
+                  ))}
             </div>
           </div>
         )}
